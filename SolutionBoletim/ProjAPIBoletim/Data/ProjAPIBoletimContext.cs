@@ -19,5 +19,9 @@ namespace ProjAPIBoletim.Data
         public DbSet<ProjAPIBoletim.Models.Curso> Curso { get; set; }
 
         public DbSet<ProjAPIBoletim.Models.Disciplina> Disciplina { get; set; }
+
+        public DbSet<ProjAPIBoletim.Models.Boletim> Boletim { get; set; }
+
+        public DbSet<ProjAPIBoletim.Models.Professor> Professor { get; set; }
     }
 }

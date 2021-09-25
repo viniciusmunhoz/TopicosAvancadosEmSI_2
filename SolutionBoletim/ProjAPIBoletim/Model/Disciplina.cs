@@ -8,7 +8,6 @@ namespace ProjAPIBoletim.Models
     public class Disciplina
     {
         public int Id { get; set; }
-        public string Descricao { get; set; }
-        public int QtdAulasPorsemana { get; set; }
+        public string NomeDisciplina { get; set; }
     }
 }

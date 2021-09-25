@@ -22,7 +22,11 @@ namespace ProjMvcBoletim.Controllers
         // GET: Cursos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Curso.ToListAsync());
+            var Aluno = await _context.Curso.Include(c => c.Aluno).ToListAsync();
+            var Disc = await _context.Curso.Include(c => c.Disciplina).ToListAsync();
+
+            //return View(await _context.Curso.ToListAsync());
+            return View(Aluno);
         }
 
         // GET: Cursos/Details/5
@@ -46,7 +50,24 @@ namespace ProjMvcBoletim.Controllers
         // GET: Cursos/Create
         public IActionResult Create()
         {
-            return View();
+            var c = new Curso();
+            var alunos = _context.Aluno.ToList();
+            var disciplinas = _context.Disciplina.ToList();
+
+            c.Alunos = new List<SelectListItem>();
+            c.Disciplinas = new List<SelectListItem>();
+
+            foreach (var alu in alunos)
+            {
+                c.Alunos.Add(new SelectListItem { Text = alu.Nome, Value = alu.Id.ToString() });
+            }
+
+            foreach (var dis in disciplinas)
+            {
+                c.Disciplinas.Add(new SelectListItem { Text = dis.NomeDisciplina, Value = dis.Id.ToString() });
+            }
+
+            return View(c);
         }
 
         // POST: Cursos/Create
@@ -54,8 +75,16 @@ namespace ProjMvcBoletim.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DataCadastro")] Curso curso)
+        public async Task<IActionResult> Create([Bind("Id,NomeCurso,DataCadastro")] Curso curso)
         {
+            int _alunoId = int.Parse(Request.Form["Aluno"].ToString());
+            var aluno = _context.Aluno.FirstOrDefault(a => a.Id == _alunoId);
+            curso.Aluno = aluno;
+
+            int _disciplinaId = int.Parse(Request.Form["Disciplina"].ToString());
+            var disciplina = _context.Disciplina.FirstOrDefault(d => d.Id == _disciplinaId);
+            curso.Disciplina = disciplina;
+
             if (ModelState.IsValid)
             {
                 _context.Add(curso);
@@ -78,6 +107,21 @@ namespace ProjMvcBoletim.Controllers
             {
                 return NotFound();
             }
+
+            var disciplinas = _context.Disciplina.ToList();
+            curso.Disciplinas = new List<SelectListItem>();
+            foreach (var dis in disciplinas)
+            {
+                curso.Disciplinas.Add(new SelectListItem { Text = dis.NomeDisciplina, Value = dis.Id.ToString() });
+            }
+
+            var alunos = _context.Aluno.ToList();
+            curso.Alunos = new List<SelectListItem>();
+            foreach (var aluno in alunos)
+            {
+                curso.Alunos.Add(new SelectListItem { Text = aluno.Nome, Value = aluno.Id.ToString() });
+            }
+
             return View(curso);
         }
 
@@ -86,12 +130,21 @@ namespace ProjMvcBoletim.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DataCadastro")] Curso curso)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeCurso,DataCadastro")] Curso curso)
         {
             if (id != curso.Id)
             {
                 return NotFound();
             }
+            /////////////////////////////////////////////
+            int _alunoId = int.Parse(Request.Form["Aluno"].ToString());
+            var aluno = _context.Aluno.FirstOrDefault(a => a.Id == _alunoId);
+            curso.Aluno = aluno;
+
+            int _disciplinaId = int.Parse(Request.Form["Disciplina"].ToString());
+            var disciplina = _context.Disciplina.FirstOrDefault(d => d.Id == _disciplinaId);
+            curso.Disciplina = disciplina;
+            ///////////////////////////////////////////
 
             if (ModelState.IsValid)
             {

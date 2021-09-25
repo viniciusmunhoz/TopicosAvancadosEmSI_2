@@ -10,7 +10,7 @@ using ProjMvcBoletim.Data;
 namespace ProjMvcBoletim.Migrations
 {
     [DbContext(typeof(ProjMvcBoletimContext))]
-    [Migration("20210923185255_InitialCreate")]
+    [Migration("20210925182533_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,49 @@ namespace ProjMvcBoletim.Migrations
                     b.ToTable("Aluno");
                 });
 
+            modelBuilder.Entity("ProjMvcBoletim.Models.Boletim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AlunoId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Bimestre1")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Bimestre2")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Bimestre3")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Bimestre4")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("DisciplinaId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Media")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Situacao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Soma")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlunoId");
+
+                    b.HasIndex("DisciplinaId");
+
+                    b.ToTable("Boletim");
+                });
+
             modelBuilder.Entity("ProjMvcBoletim.Models.Curso", b =>
                 {
                     b.Property<int>("Id")
@@ -60,6 +103,9 @@ namespace ProjMvcBoletim.Migrations
 
                     b.Property<int?>("DisciplinaId")
                         .HasColumnType("int");
+
+                    b.Property<string>("NomeCurso")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -77,15 +123,56 @@ namespace ProjMvcBoletim.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("NomeDisciplina")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QtdAulasPorsemana")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Disciplina");
+                });
+
+            modelBuilder.Entity("ProjMvcBoletim.Models.Professor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DisciplinaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Endereco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DisciplinaId");
+
+                    b.ToTable("Professor");
+                });
+
+            modelBuilder.Entity("ProjMvcBoletim.Models.Boletim", b =>
+                {
+                    b.HasOne("ProjMvcBoletim.Models.Aluno", "Aluno")
+                        .WithMany()
+                        .HasForeignKey("AlunoId");
+
+                    b.HasOne("ProjMvcBoletim.Models.Disciplina", "Disciplina")
+                        .WithMany()
+                        .HasForeignKey("DisciplinaId");
+
+                    b.Navigation("Aluno");
+
+                    b.Navigation("Disciplina");
                 });
 
             modelBuilder.Entity("ProjMvcBoletim.Models.Curso", b =>
@@ -99,6 +186,15 @@ namespace ProjMvcBoletim.Migrations
                         .HasForeignKey("DisciplinaId");
 
                     b.Navigation("Aluno");
+
+                    b.Navigation("Disciplina");
+                });
+
+            modelBuilder.Entity("ProjMvcBoletim.Models.Professor", b =>
+                {
+                    b.HasOne("ProjMvcBoletim.Models.Disciplina", "Disciplina")
+                        .WithMany()
+                        .HasForeignKey("DisciplinaId");
 
                     b.Navigation("Disciplina");
                 });

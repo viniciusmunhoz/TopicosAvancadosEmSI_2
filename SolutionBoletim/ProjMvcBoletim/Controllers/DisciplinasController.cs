@@ -54,7 +54,7 @@ namespace ProjMvcBoletim.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao,QtdAulasPorsemana")] Disciplina disciplina)
+        public async Task<IActionResult> Create([Bind("Id,NomeDisciplina")] Disciplina disciplina)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace ProjMvcBoletim.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,QtdAulasPorsemana")] Disciplina disciplina)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeDisciplina")] Disciplina disciplina)
         {
             if (id != disciplina.Id)
             {

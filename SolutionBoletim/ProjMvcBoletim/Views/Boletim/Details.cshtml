@@ -1,0 +1,48 @@
+﻿@model ProjMvcBoletim.Models.Boletim
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Boletim</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bimestre1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bimestre1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bimestre2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bimestre2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bimestre3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bimestre3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Bimestre4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Bimestre4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Situacao)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Situacao)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

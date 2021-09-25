@@ -10,6 +10,7 @@ namespace ProjAPIBoletim.Models
     public class Curso
     {
         public int Id { get; set; }
+        public string NomeCurso { get; set; }
         public virtual Aluno Aluno { get; set; }
         [NotMapped]
         public virtual List<SelectListItem> Alunos { get; set; }

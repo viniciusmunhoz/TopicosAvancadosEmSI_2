@@ -12,23 +12,23 @@ namespace ProjAPIBoletim.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AlunosController : ControllerBase
+    public class AlunoesController : ControllerBase
     {
         private readonly ProjAPIBoletimContext _context;
 
-        public AlunosController(ProjAPIBoletimContext context)
+        public AlunoesController(ProjAPIBoletimContext context)
         {
             _context = context;
         }
 
-        // GET: api/Alunos
+        // GET: api/Alunoes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Aluno>>> GetAluno()
         {
             return await _context.Aluno.ToListAsync();
         }
 
-        // GET: api/Alunos/5
+        // GET: api/Alunoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Aluno>> GetAluno(int id)
         {
@@ -42,7 +42,7 @@ namespace ProjAPIBoletim.Controllers
             return aluno;
         }
 
-        // PUT: api/Alunos/5
+        // PUT: api/Alunoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAluno(int id, Aluno aluno)
@@ -73,7 +73,7 @@ namespace ProjAPIBoletim.Controllers
             return NoContent();
         }
 
-        // POST: api/Alunos
+        // POST: api/Alunoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Aluno>> PostAluno(Aluno aluno)
@@ -84,7 +84,7 @@ namespace ProjAPIBoletim.Controllers
             return CreatedAtAction("GetAluno", new { id = aluno.Id }, aluno);
         }
 
-        // DELETE: api/Alunos/5
+        // DELETE: api/Alunoes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAluno(int id)
         {

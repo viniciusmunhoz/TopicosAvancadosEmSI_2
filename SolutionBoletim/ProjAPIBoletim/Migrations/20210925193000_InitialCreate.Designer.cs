@@ -10,7 +10,7 @@ using ProjAPIBoletim.Data;
 namespace ProjAPIBoletim.Migrations
 {
     [DbContext(typeof(ProjAPIBoletimContext))]
-    [Migration("20210923190636_InitialCreate")]
+    [Migration("20210925193000_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

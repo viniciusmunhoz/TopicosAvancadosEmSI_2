@@ -19,5 +19,9 @@ namespace ProjMvcBoletim.Data
         public DbSet<ProjMvcBoletim.Models.Curso> Curso { get; set; }
 
         public DbSet<ProjMvcBoletim.Models.Disciplina> Disciplina { get; set; }
+
+        public DbSet<ProjMvcBoletim.Models.Professor> Professor { get; set; }
+
+        public DbSet<ProjMvcBoletim.Models.Boletim> Boletim { get; set; }
     }
 }
