@@ -139,6 +139,7 @@ namespace ProjMvcBoletim.Controllers
                 return NotFound();
             }
 
+
             var alunos = _context.Aluno.ToList();
             boletim.Alunos = new List<SelectListItem>();
             foreach (var aluno in alunos)
@@ -151,6 +152,22 @@ namespace ProjMvcBoletim.Controllers
             foreach (var dis in disciplinas)
             {
                 boletim.Disciplinas.Add(new SelectListItem { Text = dis.NomeDisciplina, Value = dis.Id.ToString() });
+            }
+
+            boletim.Soma = boletim.Bimestre1 + boletim.Bimestre2 + boletim.Bimestre3 + boletim.Bimestre4;
+
+            if (boletim.Soma > 0)
+            {
+                boletim.Media = float.Parse(boletim.Soma.ToString()) / 4;
+            }
+
+            if (boletim.Media >= 5)
+            {
+                boletim.Situacao = "APROVADO";
+            }
+            else
+            {
+                boletim.Situacao = "REPROVADO";
             }
 
             return View(boletim);
@@ -176,6 +193,22 @@ namespace ProjMvcBoletim.Controllers
             int _disciplinaId = int.Parse(Request.Form["Disciplina"].ToString());
             var disciplina = _context.Disciplina.FirstOrDefault(d => d.Id == _disciplinaId);
             boletim.Disciplina = disciplina;
+
+            boletim.Soma = boletim.Bimestre1 + boletim.Bimestre2 + boletim.Bimestre3 + boletim.Bimestre4;
+
+            if (boletim.Soma > 0)
+            {
+                boletim.Media = float.Parse(boletim.Soma.ToString()) / 4;
+            }
+
+            if (boletim.Media >= 5)
+            {
+                boletim.Situacao = "APROVADO";
+            }
+            else
+            {
+                boletim.Situacao = "REPROVADO";
+            }
 
 
             if (ModelState.IsValid)
