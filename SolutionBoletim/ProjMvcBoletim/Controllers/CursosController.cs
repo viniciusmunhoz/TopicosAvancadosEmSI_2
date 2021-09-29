@@ -22,9 +22,7 @@ namespace ProjMvcBoletim.Controllers
         // GET: Cursos
         public async Task<IActionResult> Index()
         {
-            var Aluno = await _context.Curso.Include(c => c.Aluno).ToListAsync();
-            var Disc = await _context.Curso.Include(c => c.Disciplina).ToListAsync();
-
+            var Aluno = await _context.Curso.Include(c => c.Aluno).Include(d => d.Disciplina).ToListAsync();
             //return View(await _context.Curso.ToListAsync());
             return View(Aluno);
         }

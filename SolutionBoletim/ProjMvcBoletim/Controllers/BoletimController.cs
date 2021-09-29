@@ -23,9 +23,7 @@ namespace ProjMvcBoletim.Controllers
         public async Task<IActionResult> Index()
         {
             //return View(await _context.Boletim.ToListAsync());
-            var Aluno = await _context.Boletim.Include(c => c.Aluno).ToListAsync();
-            var Disc = await _context.Boletim.Include(c => c.Disciplina).ToListAsync();
-
+            var Aluno = await _context.Boletim.Include(c => c.Aluno).Include(c => c.Disciplina).ToListAsync();
             return View(Aluno);
         }
 
