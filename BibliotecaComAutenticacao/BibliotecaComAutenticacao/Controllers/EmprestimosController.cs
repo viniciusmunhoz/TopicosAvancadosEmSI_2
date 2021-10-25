@@ -35,8 +35,25 @@ namespace BibliotecaComAutenticacao.Controllers
                 return NotFound();
             }
 
-            var emprestimo = await _context.Emprestimo
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var emprestimo = await _context.Emprestimo.FirstOrDefaultAsync(m => m.Id == id);
+
+            var emprestimo = _context.Emprestimo.Include(a => a.Livro).First(i => i.Id == id);
+            var livros = _context.Livro.ToList();
+            emprestimo.Livros = new List<SelectListItem>();
+
+            foreach (var Itemlivro in livros)
+            {
+                emprestimo.Livros.Add(new SelectListItem { Text = Itemlivro.Nome, Value = Itemlivro.Id.ToString() });
+            }
+
+            var clientes = _context.Cliente.ToList();
+            emprestimo.Clientes = new List<SelectListItem>();
+
+            foreach (var ItemCliente in clientes)
+            {
+                emprestimo.Clientes.Add(new SelectListItem { Text = ItemCliente.Nome, Value = ItemCliente.Id.ToString() });
+            }
+
             if (emprestimo == null)
             {
                 return NotFound();
