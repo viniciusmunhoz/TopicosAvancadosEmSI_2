@@ -22,7 +22,7 @@ namespace ProjetoVendaCalcados.Controllers
         // GET: Vendas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Venda.ToListAsync());
+            return View(await _context.Venda.Include(c => c.Cliente).Include(v => v.Vendedor).Include(l => l.Loja).ToListAsync());
         }
 
         // GET: Vendas/Details/5
@@ -33,8 +33,46 @@ namespace ProjetoVendaCalcados.Controllers
                 return NotFound();
             }
 
-            var venda = await _context.Venda
-                .FirstOrDefaultAsync(m => m.Id == id);
+            // var venda = await _context.Venda.FirstOrDefaultAsync(m => m.Id == id);
+
+            //Preenchendo a lista de clientes
+            var venda = _context.Venda.Include(c => c.Cliente).First(i => i.Id == id);
+            var clientes = _context.Cliente.ToList();
+            venda.Clientes = new List<SelectListItem>();
+            foreach (var ItemCliente in clientes)
+            {
+                venda.Clientes.Add(new SelectListItem { Text = ItemCliente.Nome, Value = ItemCliente.Id.ToString() });
+            }
+            //
+
+            //Preenchendo a lista de Calçados
+            var calcados = _context.Calcado.ToList();
+            venda.Calcados = new List<SelectListItem>();
+            foreach (var ItemCalcados in calcados)
+            {
+                venda.Calcados.Add(new SelectListItem { Text = ItemCalcados.NomeCalcado, Value = ItemCalcados.Id.ToString() });
+            }
+            //
+
+            //Preenchendo a lista de Vendedores
+            var vendedores = _context.Vendedor.ToList();
+            venda.Vendedores = new List<SelectListItem>();
+            foreach (var ItemVendedores in vendedores)
+            {
+                venda.Vendedores.Add(new SelectListItem { Text = ItemVendedores.Id.ToString(), Value = ItemVendedores.Id.ToString() });
+            }
+            //
+
+            //Preenchendo a lista de Lojas
+            var lojas = _context.Loja.ToList();
+            venda.Lojas = new List<SelectListItem>();
+            foreach (var ItemLojas in lojas)
+            {
+                venda.Lojas.Add(new SelectListItem { Text = ItemLojas.Id.ToString(), Value = ItemLojas.Id.ToString() });
+            }
+            //
+
+
             if (venda == null)
             {
                 return NotFound();
@@ -46,7 +84,39 @@ namespace ProjetoVendaCalcados.Controllers
         // GET: Vendas/Create
         public IActionResult Create()
         {
-            return View();
+            var v = new Venda();
+            var clientes = _context.Cliente.ToList();
+            var calcados = _context.Calcado.ToList();
+            var vendedores = _context.Vendedor.ToList();
+            var lojas = _context.Loja.ToList();
+
+            v.Clientes = new List<SelectListItem>();
+            v.Calcados = new List<SelectListItem>();
+            v.Vendedores = new List<SelectListItem>();
+            v.Lojas = new List<SelectListItem>();
+
+            foreach (var cli in clientes)
+            {
+                v.Clientes.Add(new SelectListItem { Text = cli.Nome, Value = cli.Id.ToString() });
+            }
+
+            foreach (var cal in calcados)
+            {
+                v.Calcados.Add(new SelectListItem { Text = cal.NomeCalcado, Value = cal.Id.ToString() });
+            }
+
+            foreach (var vende in vendedores)
+            {
+                v.Vendedores.Add(new SelectListItem { Text = vende.Id.ToString(), Value = vende.Id.ToString() });
+            }
+
+            foreach (var loj in lojas)
+            {
+                v.Lojas.Add(new SelectListItem { Text = loj.Id.ToString(), Value = loj.Id.ToString() });
+            }
+
+
+            return View(v);
         }
 
         // POST: Vendas/Create
@@ -58,6 +128,31 @@ namespace ProjetoVendaCalcados.Controllers
         {
             if (ModelState.IsValid)
             {
+                int _clienteId = int.Parse(Request.Form["Cliente"].ToString());
+                var cliente = _context.Cliente.FirstOrDefault(c => c.Id == _clienteId);
+                venda.Cliente = cliente;
+
+                string _itensID = Request.Form["Calcado"].ToString();
+
+                string[] subs = _itensID.Split(',');
+
+                foreach (string sub in subs)
+                {
+                    var calcados = _context.Calcado.FirstOrDefault(c => c.Id == int.Parse(sub));
+                    venda.Total = venda.Total + calcados.Preco;
+                }
+     
+                venda.Itens = _itensID;
+
+                int _vendedorId = int.Parse(Request.Form["Vendedor"].ToString());
+                var vendedor = _context.Vendedor.FirstOrDefault(c => c.Id == _vendedorId);
+                venda.Vendedor = vendedor;
+
+                int _lojaId = int.Parse(Request.Form["Loja"].ToString());
+                var loja = _context.Loja.FirstOrDefault(c => c.Id == _lojaId);
+                venda.Loja = loja;
+ 
+
                 _context.Add(venda);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

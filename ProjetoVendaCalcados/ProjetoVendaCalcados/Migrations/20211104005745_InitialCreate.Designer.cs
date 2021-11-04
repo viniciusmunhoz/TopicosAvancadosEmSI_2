@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoVendaCalcados.Data;
 
-namespace ProjetoVendaCalcados.Data.Migrations
+namespace ProjetoVendaCalcados.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211101203135_InitialCreate")]
+    [Migration("20211104005745_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -303,9 +303,6 @@ namespace ProjetoVendaCalcados.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CalcadoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
@@ -315,15 +312,19 @@ namespace ProjetoVendaCalcados.Data.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Itens")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("LojaId")
                         .HasColumnType("int");
+
+                    b.Property<float>("Total")
+                        .HasColumnType("real");
 
                     b.Property<int?>("VendedorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CalcadoId");
 
                     b.HasIndex("ClienteId");
 
@@ -345,6 +346,9 @@ namespace ProjetoVendaCalcados.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Endereco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeVendedor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Telefone")
@@ -408,10 +412,6 @@ namespace ProjetoVendaCalcados.Data.Migrations
 
             modelBuilder.Entity("ProjetoVendaCalcados.Models.Venda", b =>
                 {
-                    b.HasOne("ProjetoVendaCalcados.Models.Calcado", "Calcado")
-                        .WithMany()
-                        .HasForeignKey("CalcadoId");
-
                     b.HasOne("ProjetoVendaCalcados.Models.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId");
@@ -423,8 +423,6 @@ namespace ProjetoVendaCalcados.Data.Migrations
                     b.HasOne("ProjetoVendaCalcados.Models.Vendedor", "Vendedor")
                         .WithMany()
                         .HasForeignKey("VendedorId");
-
-                    b.Navigation("Calcado");
 
                     b.Navigation("Cliente");
 

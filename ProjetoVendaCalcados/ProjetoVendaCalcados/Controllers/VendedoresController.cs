@@ -54,7 +54,7 @@ namespace ProjetoVendaCalcados.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Endereco,Telefone,Cnpj")] Vendedor vendedor)
+        public async Task<IActionResult> Create([Bind("Id,NomeVendedor,Endereco,Telefone,Cnpj")] Vendedor vendedor)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace ProjetoVendaCalcados.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Endereco,Telefone,Cnpj")] Vendedor vendedor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeVendedor,Endereco,Telefone,Cnpj")] Vendedor vendedor)
         {
             if (id != vendedor.Id)
             {

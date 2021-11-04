@@ -114,7 +114,36 @@ namespace ProjetoVendaCalcados.Controllers
             {
                 try
                 {
-                    _context.Update(calcado);
+
+                    //Verifica se o nome da imagem mudou:
+                    var calcadoCompare = _context.Calcado.Find(calcado.Id);
+
+                    calcado.Imagem = (calcado.ImagemCalcado == null) ? "" : calcado.ImagemCalcado.FileName;
+
+                    if (!CompareFileName(calcadoCompare.Imagem, calcado.Imagem))
+                    {
+                        //Remover Imagem anterior
+                        var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", calcadoCompare.Imagem);
+                        if (System.IO.File.Exists(imagePath))
+                            System.IO.File.Delete(imagePath);
+
+                        //Incluir nova
+                        string wwwRootPath = _hostEnvironment.WebRootPath;
+                        string fileName = Path.GetFileNameWithoutExtension(calcado.ImagemCalcado.FileName);
+                        string extension = Path.GetExtension(calcado.ImagemCalcado.FileName);
+                        calcado.Imagem = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        string path = Path.Combine(wwwRootPath + "/image", fileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await calcado.ImagemCalcado.CopyToAsync(fileStream);
+                        }
+                    }
+
+
+                    calcadoCompare.Imagem = string.IsNullOrEmpty(calcado.Imagem) ? calcadoCompare.Imagem : calcado.Imagem;
+
+                    _context.Update(calcadoCompare);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -131,6 +160,32 @@ namespace ProjetoVendaCalcados.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(calcado);
+        }
+
+        private bool CompareFileName(string name, string newName)
+        {
+            //Se não foi selecionada uma imagem nova fica a antiga. 
+            if (string.IsNullOrEmpty(newName))
+                return true;
+
+            if (string.IsNullOrEmpty(name))
+                return false;
+
+            //extensão do arquivo
+            var validateName = name.Split('.');
+            var validateNewName = newName.Split('.');
+
+            if (validateName[1] != validateNewName[1])
+                return false;
+
+            //Remover a data gerada
+            string nameOld = validateName[0].Replace(validateName[0]
+                                            .Substring(validateName[0].Length - 9, 9), "");
+
+            if (newName == nameOld)
+                return true;
+
+            return false;
         }
 
         // GET: Calcados/Delete/5
