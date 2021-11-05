@@ -9,7 +9,7 @@ namespace ProjetoVendaCalcados.Models
     {
         public int Id { get; set; }
         public string Endereco { get; set; }
-        public int Telefone { get; set; }
-        public int Cnpj { get; set; }
+        public string Telefone { get; set; }
+        public string Cnpj { get; set; }
     }
 }

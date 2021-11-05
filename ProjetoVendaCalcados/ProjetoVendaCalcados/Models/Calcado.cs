@@ -16,6 +16,8 @@ namespace ProjetoVendaCalcados.Models
         public string NomeCalcado { get; set; }
         public string Tipo { get; set; }
         public short Numero { get; set; }
+
+        [DisplayName("Preço")] // DisplayName para aparecer com a acentuação
         public float Preco { get; set; }
 
         [DisplayName("Imagem")]

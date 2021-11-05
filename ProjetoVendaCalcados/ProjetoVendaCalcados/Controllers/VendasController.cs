@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +11,9 @@ using ProjetoVendaCalcados.Models;
 
 namespace ProjetoVendaCalcados.Controllers
 {
+    [Authorize]
     public class VendasController : Controller
-    {
+    {    
         private readonly ApplicationDbContext _context;
 
         public VendasController(ApplicationDbContext context)
@@ -34,9 +36,9 @@ namespace ProjetoVendaCalcados.Controllers
             }
 
             // var venda = await _context.Venda.FirstOrDefaultAsync(m => m.Id == id);
+            var venda = _context.Venda.Include(c => c.Cliente).First(i => i.Id == id);
 
             //Preenchendo a lista de clientes
-            var venda = _context.Venda.Include(c => c.Cliente).First(i => i.Id == id);
             var clientes = _context.Cliente.ToList();
             venda.Clientes = new List<SelectListItem>();
             foreach (var ItemCliente in clientes)
@@ -45,21 +47,12 @@ namespace ProjetoVendaCalcados.Controllers
             }
             //
 
-            //Preenchendo a lista de Calçados
-            var calcados = _context.Calcado.ToList();
-            venda.Calcados = new List<SelectListItem>();
-            foreach (var ItemCalcados in calcados)
-            {
-                venda.Calcados.Add(new SelectListItem { Text = ItemCalcados.NomeCalcado, Value = ItemCalcados.Id.ToString() });
-            }
-            //
-
             //Preenchendo a lista de Vendedores
             var vendedores = _context.Vendedor.ToList();
             venda.Vendedores = new List<SelectListItem>();
             foreach (var ItemVendedores in vendedores)
             {
-                venda.Vendedores.Add(new SelectListItem { Text = ItemVendedores.Id.ToString(), Value = ItemVendedores.Id.ToString() });
+                venda.Vendedores.Add(new SelectListItem { Text = ItemVendedores.NomeVendedor, Value = ItemVendedores.Id.ToString() });
             }
             //
 
@@ -107,7 +100,7 @@ namespace ProjetoVendaCalcados.Controllers
 
             foreach (var vende in vendedores)
             {
-                v.Vendedores.Add(new SelectListItem { Text = vende.Id.ToString(), Value = vende.Id.ToString() });
+                v.Vendedores.Add(new SelectListItem { Text = vende.NomeVendedor.ToString(), Value = vende.Id.ToString() });
             }
 
             foreach (var loj in lojas)
@@ -124,7 +117,7 @@ namespace ProjetoVendaCalcados.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao,DataVenda")] Venda venda)
+        public async Task<IActionResult> Create([Bind("Id,NomeVendedor,Descricao,DataVenda")] Venda venda)
         {
             if (ModelState.IsValid)
             {
@@ -139,7 +132,7 @@ namespace ProjetoVendaCalcados.Controllers
                 foreach (string sub in subs)
                 {
                     var calcados = _context.Calcado.FirstOrDefault(c => c.Id == int.Parse(sub));
-                    venda.Total = venda.Total + calcados.Preco;
+                    venda.Total += calcados.Preco;
                 }
      
                 venda.Itens = _itensID;
